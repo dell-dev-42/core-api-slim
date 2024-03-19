@@ -3,6 +3,9 @@
 // Application default settings
 
 // Error reporting
+
+use App\Database\Capsule;
+
 error_reporting(0);
 ini_set('display_errors', '0');
 ini_set('display_startup_errors', '0');
@@ -26,18 +29,25 @@ $settings['logger'] = [
     'level' => \Psr\Log\LogLevel::DEBUG,
 ];
 
-// Database settings
-$settings['db'] = [
-    'host' => 'localhost',
-    'encoding' => 'utf8mb4',
-    'collation' => 'utf8mb4_unicode_ci',
-    // PDO options
-    'options' => [
-        PDO::ATTR_PERSISTENT => false,
-        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-        PDO::ATTR_EMULATE_PREPARES => true,
-        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-    ],
-];
+$settings['db'] = function () {
+    $capsule = new \Illuminate\Database\Capsule\Manager();
+    $capsule->addConnection([
+        'driver' => 'mysql',
+        'host' => '127.0.0.1',
+        'database' => 'slim_db',
+        'username' => 'root',
+        'password' => 'secret',
+        'charset' => 'utf8',
+        'collation' => 'utf8_unicode_ci',
+        'prefix' => '',
+    ]);
+    $capsule->setAsGlobal();
+    $capsule->bootEloquent();
+    return $capsule;
+};
+
+$settings[\App\Action\Home\HomeAction::class] = function () {
+    return new \App\Action\Home\HomeAction();
+};
 
 return $settings;
