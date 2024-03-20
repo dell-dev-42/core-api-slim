@@ -1,5 +1,6 @@
 <?php
 
+use App\Database\Capsule;
 use App\Middleware\ExceptionMiddleware;
 use App\Renderer\JsonRenderer;
 use Monolog\Formatter\LineFormatter;
@@ -24,6 +25,8 @@ return [
 
     App::class => function (ContainerInterface $container) {
         $app = AppFactory::createFromContainer($container);
+
+        (new Capsule())->getCapsule();
 
         // Register routes
         (require __DIR__ . '/routes.php')($app);

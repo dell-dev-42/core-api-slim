@@ -30,24 +30,7 @@ $settings['logger'] = [
 ];
 
 $settings['db'] = function () {
-    $capsule = new \Illuminate\Database\Capsule\Manager();
-    $capsule->addConnection([
-        'driver' => 'mysql',
-        'host' => '127.0.0.1',
-        'database' => 'slim_db',
-        'username' => 'root',
-        'password' => 'secret',
-        'charset' => 'utf8',
-        'collation' => 'utf8_unicode_ci',
-        'prefix' => '',
-    ]);
-    $capsule->setAsGlobal();
-    $capsule->bootEloquent();
-    return $capsule;
-};
-
-$settings[\App\Action\Home\HomeAction::class] = function () {
-    return new \App\Action\Home\HomeAction();
+    return (new Capsule())->getCapsule();
 };
 
 return $settings;
